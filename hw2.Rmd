@@ -1,0 +1,83 @@
+---
+title: "hw2"
+author: "Carter Athens; carterathens"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Submission instructions**: Create a folder named `ds202_hw2`, and name the RMarkDown file including your solutions `hw2.Rmd` under this folder. For submission, create a GitHub repository named `ds202_hw2` under your account, and push both `hw2.Rmd` and the knitted `hw2.html` to GitHub before the deadline. I will assume you use the same GitHub username as for your HW1 submission. The latest version of your homework appearing on GitHub before the deadline is graded. *It is crucial to follow the exact folder structure and file names*, so that your homework can be reproduced and graded by an automated script. Some questions will require the following answer format.
+
+## R commands
+1. Today's temperature has a high of 15 and a low of -10 degree fahrenheit.  Find the corresponding degress in celsius and storage it in a (single) vector named `cel`. Print the variable.
+15 degrees fahrenheit = -9.44 degrees celsius
+-10 degrees fahrenheit = -23.33 degrees celsius
+<pre><code>```{r}
+cel <- -9.44:-23.33
+print(cel)
+```</code></pre>
+
+2. Create a vector of length 200. The odd entries should be 1 and even entries should be 0. Storage the created in a variable named `vec200` and print.
+<pre><code>```{r}
+vec200 <- rep(1:0,length.out=200)
+print(vec200)
+```</code></pre>
+
+3. How many perfect squares are there between 1 and 1001? Storage the answer in a  variable named `numPerfect` and print. You may want to look at `?round`.
+Let S be the set of all perfect squares between 1 and 1001
+S = 1 < n^2 < 1001
+S = {4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400, 441, 484, 529, 576, 625, 676, 729, 784, 841, 900, 961}
+
+<pre><code>```{r}
+numPerfect <- 30
+print(numPerfect)
+```</code></pre>
+
+## Cars and mileage
+For this part we will use the `mpg` data set, you can access the data by loading the package `ggplot2` into your R session by executing the command 
+`library(ggplot2)`. The `mpg` data includes information about fuel economy of popular car models
+for the years 1999 and 2008 as collected by the US Environmental Protection Agency. An answer should include a short paragraph of text for the explanation to a (human) reader, together with appropriate R code, outputs, and graphs.
+
+Most exercises are from the ggplot2 book section 2.2.1. You might find it helpful for working on the homework to read through this section. *However, all questions can be solved by using just the basic R graphics functions.*
+
+1. What are the 3 most fuel-efficient models in terms of highway mileage? Storage the data frame (with 3 rows) containing all information of these three cars in a variable named `top3` and print.
+<pre><code>```{r}
+modelAndHwy <- mpg[,c('model', 'hwy')] #I used this variable so that I could inspect it and find the 3 highest hwy gas milages. I noted that the top 3 models had hwy gas milages of 44, 44, and 41.
+mpg$hwy == '44' #I used this to find the row number of the 2 models with a hwy gas milage of 44. I noted that the rows were 213 and 222.
+mpg$hwy == '41' #I used this to find the row number of the model with the hwy gas milage of 41. I noted that the row was 223.
+top3 <- data.frame(mpg[213,])
+newRow <- data.frame(mpg[222,])
+newRow1 <- data.frame(mpg[223,])
+top3 <- rbind(top3, newRow)
+top3 <- rbind(top3, newRow1)
+print(top3)
+```</code></pre>
+The final output is:
+  manufacturer      model displ year cyl      trans drv cty hwy fl      class
+1   volkswagen      jetta   1.9 1999   4 manual(m5)   f  33  44  d    compact
+2   volkswagen new beetle   1.9 1999   4 manual(m5)   f  35  44  d subcompact
+3   volkswagen new beetle   1.9 1999   4   auto(l4)   f  29  41  d subcompact
+I'm fairly certain I made this way too complicated but I couldn't figure out how to group by models and hwy, but then sort by hwy only.
+
+2. How many different compact models are included in this dataset? Storage the answer in  a variable named `numCompact` and print.
+<pre><code>```{r}
+numCompact <- unique(mpg[['manufacturer']])
+print(numCompact)
+```</code></pre>
+[1] "audi"       "chevrolet"  "dodge"      "ford"       "honda"      "hyundai"    "jeep"       "land rover" "lincoln"    "mercury"    "nissan"     "pontiac"    "subaru"     "toyota"     "volkswagen"
+
+3. Create a scatterplot of `hwy` and `cty` and describe the relationship. Why are there so few points visible?
+<pre><code>```{r}
+plot(mpg$hwy, mpg$cty)
+```</code></pre>
+As cty increases, hwy also increases. This is because you pretty much can't have one without the other.
+There are so few points visible because of duplicate data points.
+
+4. Are cars in 2008 more fuel efficient than cars in 1999? Use graphs *and* summary statistics to answer this question. 
+<pre><code>```{r}
+plot(mpg$hwy, mpg$cty, col=mpg$year)
+```</code></pre>
+
+Note: your submission is supposed to be fully reproducible, i.e. the TA and I will 'knit' your submission. Make sure that you don't use any file structure that depends on your computing environment.
